@@ -16,7 +16,7 @@ class ViewController: UIViewController {
     var fontSize: Double = 10 {
         didSet {
             allLabels.forEach { $0.font = $0.font.withSize(CGFloat(fontSize)) }
-            UserDefaults.standard.set(fontSize, forKey: "fontSize")
+            UserDefaultsWrapper.manager.store(fontSize: fontSize)
         }
     }
     
@@ -28,14 +28,14 @@ class ViewController: UIViewController {
             case false:
                 allLabels.forEach { $0.text = $0.text?.lowercased() }
             }
-            UserDefaults.standard.set(uppercaseText, forKey: "uppercaseText")
+            UserDefaultsWrapper.manager.store(shouldUppercaseText: uppercaseText)
         }
     }
     
     var username = "" {
         didSet {
             welcomeMessageLabel.text = "Welcome " + username + "!"
-            UserDefaults.standard.set(username, forKey: "username")
+            UserDefaultsWrapper.manager.store(username: username)
         }
     }
     
@@ -50,15 +50,15 @@ class ViewController: UIViewController {
     // MARK: - Private Methods
     
     private func setInitialValuesFromUserDefaults() {
-        if let storedUsername = UserDefaults.standard.value(forKey: "username") as? String {
+        if let storedUsername = UserDefaultsWrapper.manager.getUsername() {
             usernameTextField.text = storedUsername
             username = storedUsername
         }
-        if let storedFontSize = UserDefaults.standard.value(forKey: "fontSize") as? Double {
+        if let storedFontSize = UserDefaultsWrapper.manager.getFontSize() {
             fontSizeSlider.value = Float(storedFontSize)
             fontSize = storedFontSize
         }
-        if let storedUppercaseText = UserDefaults.standard.value(forKey: "uppercaseText") as? Bool {
+        if let storedUppercaseText = UserDefaultsWrapper.manager.getShouldUppercaseText() {
             uppercaseTextSwitch.isOn = storedUppercaseText
             uppercaseText = storedUppercaseText
         }
